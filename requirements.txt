@@ -1,0 +1,41 @@
+# =============================================================================
+# ModularForge — Dependencies
+# =============================================================================
+# Compatible with: macOS (Apple Silicon M4 Pro), Linux, Kaggle notebooks
+# Python: 3.10+
+#
+# NOTE FOR KAGGLE USERS:
+#   Kaggle comes with torch, numpy, tqdm pre-installed.
+#   You only need to install the extras:
+#     !pip install safetensors tokenizers pyyaml sentence-transformers
+# =============================================================================
+
+# Core ML framework — works on CPU, MPS (Apple Silicon), and CUDA (Kaggle GPU)
+torch>=2.1.0
+
+# Efficient, secure tensor serialization — used for streaming assembly
+safetensors>=0.4.0
+
+# HuggingFace datasets — for downloading WikiText-103
+datasets>=2.14.0
+
+# HuggingFace tokenizers — fast BPE tokenizer training
+tokenizers>=0.15.0
+
+# Numerical computing
+numpy>=1.24.0
+
+# Progress bars
+tqdm>=4.65.0
+
+# Configuration management
+pyyaml>=6.0
+
+# Sentence embeddings for data clustering/partitioning
+sentence-transformers>=2.2.0
+
+# Clustering for data partitioning
+scikit-learn>=1.3.0
+
+# Logging and experiment tracking (lightweight)
+tensorboard>=2.14.0

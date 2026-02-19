@@ -1,0 +1,38 @@
+# ModularForge environment and build artifacts
+env/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Data artifacts (downloaded datasets, tokenizer files)
+data/
+outputs/
+experiments/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+runs/
+
+# Checkpoints (can be large)
+*.pt
+*.safetensors
+*.bin
+
+# Jupyter
+.ipynb_checkpoints/
