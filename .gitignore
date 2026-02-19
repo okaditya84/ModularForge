@@ -11,7 +11,7 @@ build/
 .eggs/
 
 # Data artifacts (downloaded datasets, tokenizer files)
-data/
+/data/
 outputs/
 experiments/
 
