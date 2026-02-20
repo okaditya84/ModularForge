@@ -415,5 +415,31 @@ class Trainer:
         torch.save(checkpoint, path)
         logger.info(f"[{self.name}] Checkpoint saved: {path}")
 
+        # Keep only the latest checkpoint for this trainer to save disk space
+        keep_n = getattr(self.config.training, 'keep_checkpoints', 1)
+        if keep_n > 0:
+            import glob
+            import re
+            
+            # Find all checkpoints for this specific trainer
+            pattern = os.path.join(output_dir, f"checkpoint_{self.name}_step_*.pt")
+            all_checkpoints = glob.glob(pattern)
+            
+            # Sort by step number
+            def get_step(p):
+                match = re.search(r"step_(\d+)\.pt$", p)
+                return int(match.group(1)) if match else -1
+                
+            all_checkpoints.sort(key=get_step)
+            
+            # Remove the oldest ones
+            while len(all_checkpoints) > keep_n:
+                old_cp = all_checkpoints.pop(0)
+                try:
+                    os.remove(old_cp)
+                    logger.info(f"[{self.name}] Removed old checkpoint: {os.path.basename(old_cp)}")
+                except OSError as e:
+                    logger.warning(f"Failed to remove old checkpoint {old_cp}: {e}")
+
     def __repr__(self) -> str:
         return f"Trainer(name={self.name}, device={self.device}, step={self.global_step})"

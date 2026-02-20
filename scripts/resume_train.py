@@ -161,7 +161,8 @@ def copy_checkpoints(src_dir: str, dst_dir: str) -> int:
     Path(dst_dir).mkdir(parents=True, exist_ok=True)
 
     n_copied = 0
-    for pattern in ["shared_components.pt", "expert_*.pt", "checkpoint_*.pt"]:
+    # 1. Copy shared components and final completed experts
+    for pattern in ["shared_components.pt", "expert_*.pt"]:
         for src_path in glob.glob(os.path.join(src_dir, pattern)):
             filename = os.path.basename(src_path)
             dst_path = os.path.join(dst_dir, filename)
@@ -172,6 +173,34 @@ def copy_checkpoints(src_dir: str, dst_dir: str) -> int:
                 n_copied += 1
             else:
                 logger.info(f"  Skipping (exists): {filename}")
+
+    # 2. Copy ONLY the newest checkpoint for each expert to save space
+    expert_checkpoints = {}
+    for src_path in glob.glob(os.path.join(src_dir, "checkpoint_expert_*_step_*.pt")):
+        filename = os.path.basename(src_path)
+        match = re.match(r"checkpoint_expert_(\d+)_step_(\d+)\.pt", filename)
+        if match:
+            expert_idx = int(match.group(1))
+            step = int(match.group(2))
+            if expert_idx not in expert_checkpoints:
+                expert_checkpoints[expert_idx] = []
+            expert_checkpoints[expert_idx].append((step, src_path))
+            
+    for expert_idx, checkpoints in expert_checkpoints.items():
+        if not checkpoints:
+            continue
+        # Find the one with the max step
+        checkpoints.sort(key=lambda x: x[0], reverse=True)
+        latest_step, latest_path = checkpoints[0]
+        
+        filename = os.path.basename(latest_path)
+        dst_path = os.path.join(dst_dir, filename)
+        if not os.path.exists(dst_path):
+            logger.info(f"  Copying latest checkpoint for expert {expert_idx}: {filename}")
+            shutil.copy2(latest_path, dst_path)
+            n_copied += 1
+        else:
+            logger.info(f"  Skipping (exists): {filename}")
 
     return n_copied
 
