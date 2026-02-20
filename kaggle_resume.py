@@ -33,7 +33,7 @@ import time
 # =============================================================================
 
 # Your GitHub repo URL
-REPO_URL = "https://github.com/YOUR_USERNAME/ModularForge.git"
+REPO_URL = "https://github.com/okaditya84/ModularForge.git"
 
 # Kaggle paths (edit if your dataset names differ)
 KAGGLE_CHECKPOINT_DIR = "/kaggle/input/modularforge-checkpoints/outputs"
